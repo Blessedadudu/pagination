@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
+import Pagination from './components/Pagination'
+import Posts from './components/Posts'
+
 
 const App = () => {
   const [posts, setPosts] = useState([]);
@@ -12,7 +15,7 @@ const App = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-         const res = await axios.get('https://jso/nplaceholder.typicode.com/posts');
+         const res = await axios.get('https://jsonplaceholder.typicode.com/posts');
       setPosts(res.data);
       setLoading(false);
       console.error(res);
@@ -26,15 +29,23 @@ const App = () => {
   }, []);
 
 
+  // Get current posts
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
   return (
-    <div className='container mt-5'>
+    <div className='container mt-5 app'>
       <h1 className='text-primary mb-3'>My Blog</h1>
-      {/* <Posts posts={currentPosts} loading={loading} /> */}
-      {/* <Pagination
+      <Posts posts={currentPosts} loading={loading} />
+      <Pagination
         postsPerPage={postsPerPage}
         totalPosts={posts.length}
         paginate={paginate}
-      /> */}
+      />
     </div>
   );
 }
